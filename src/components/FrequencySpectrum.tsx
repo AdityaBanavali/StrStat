@@ -1,6 +1,7 @@
 import React from 'react';
-import { Radio, AlertTriangle } from 'lucide-react';
+import { Radio, AlertTriangle, TrendingUp } from 'lucide-react';
 import { FftData } from '../types';
+import { calculateResonantFrequencyDrift, NOMINAL_BASELINE_FREQ_HZ } from '../utils/structuralMath';
 
 interface FrequencySpectrumProps {
   fft?: FftData;
@@ -13,8 +14,9 @@ export const FrequencySpectrum: React.FC<FrequencySpectrumProps> = ({
 }) => {
   const dominantFreq = fft?.dominant_freq_hz ?? 0;
   const peakMagnitude = fft?.peak_magnitude ?? 0;
+  const driftPercent = calculateResonantFrequencyDrift(dominantFreq, NOMINAL_BASELINE_FREQ_HZ);
 
-  // Structural danger zone: 2.8 - 3.8 Hz (centered around 3.2 Hz natural frequency)
+  // Structural danger zone: 2.8 - 3.8 Hz (centered around natural frequency band)
   const isResonanceZone = isConnected && dominantFreq >= 2.6 && dominantFreq <= 3.8;
 
   // Synthesize spectrum envelope distribution across 1 - 10 Hz bins for visual feedback
@@ -33,7 +35,7 @@ export const FrequencySpectrum: React.FC<FrequencySpectrumProps> = ({
       </div>
 
       <div className="my-2 space-y-3">
-        {/* Dominant metrics */}
+        {/* Dominant metrics & Drift */}
         <div className="flex items-baseline justify-between font-mono">
           <div>
             <span className="text-[10px] text-slate-500 block uppercase">DOMINANT FREQ (f_exc):</span>
@@ -46,6 +48,23 @@ export const FrequencySpectrum: React.FC<FrequencySpectrumProps> = ({
                 {isConnected ? dominantFreq.toFixed(2) : '--'}
               </span>
               <span className="text-xs text-slate-500">Hz</span>
+            </div>
+          </div>
+
+          <div className="text-center">
+            <span className="text-[10px] text-slate-500 block uppercase">DRIFT vs f₀ (4.0 Hz):</span>
+            <div className="flex items-baseline gap-1 justify-center">
+              <span
+                className={`text-base font-semibold tabular-nums ${
+                  !isConnected
+                    ? 'text-slate-600'
+                    : Math.abs(driftPercent) > 15
+                    ? 'text-rose-400'
+                    : 'text-emerald-400'
+                }`}
+              >
+                {isConnected ? `${driftPercent > 0 ? '+' : ''}${driftPercent.toFixed(1)}%` : '--'}
+              </span>
             </div>
           </div>
 
