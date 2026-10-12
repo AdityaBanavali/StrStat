@@ -7,17 +7,21 @@ export default {
   theme: {
     extend: {
       colors: {
-        cyber: {
-          dark: '#090d16',
-          panel: '#0e1424',
-          card: '#121a2f',
-          border: '#1e293b',
-          cyan: '#38bdf8',
-          accent: '#0284c7'
+        telemetry: {
+          darkest: '#090A0F',
+          panel: '#111318',
+          card: '#161922',
+          border: '#1F2430',
+          muted: '#64748B',
+          nominal: '#10B981',
+          resonance: '#F59E0B',
+          hazard: '#EF4444',
+          cyan: '#38BDF8'
         }
       },
       fontFamily: {
-        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace']
+        mono: ['JetBrains Mono', 'Roboto Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+        sans: ['Inter', 'Geist', 'system-ui', '-apple-system', 'sans-serif']
       }
     },
   },
